@@ -4,16 +4,26 @@ import {enterFullscreen, exitFullscreen} from './helpers/fullscreen'
 import {fullscreenState} from './state/fullscreenState'
 import {searchState} from './state/searchState'
 import {clockState} from './state/clockState'
+import {directoryDisplayState} from './state/directoryDisplayState'
 import {Search} from './ui/Search'
 import {Clock} from './ui/Clock'
 import {Directories} from './ui/Directories'
+import {DirectoriesNULL} from './ui/DirectoriesNULL'
+import {getDirectory} from './subprocesses/getDirectory'
+import {readFile} from './subprocesses/readFile'
 
 const App: FC = () => {
+    readFile()
+    getDirectory()
     const toggleFullscreen = fullscreenState((state) => state.toggleFullscreen)
     const toggleSearch = searchState((state) => state.toggleSearch)
     const toggleClock = clockState((state) => state.toggleClock)
+    const toggleDirectoryDisplay = directoryDisplayState((state) => state.toggleDisplay)
+    // const directoryDisplay = directoryDisplayState((state) => state.display)
+
     //@ts-ignore
     const [reload, setReload] = useState(0)
+    const [displayBool, setDisplaybool] = useState(true)
     const {exit} = useApp()
 
     useInput((input) => {
@@ -26,6 +36,9 @@ const App: FC = () => {
                 break
             case "T":
                 toggleClock()
+                break
+            case "P":
+                toggleDirectoryDisplay()
                 break
             case "q":
                 exit()
@@ -41,6 +54,7 @@ const App: FC = () => {
                 value ? enterFullscreen() : exitFullscreen()
             }
         )
+
         const unsubscribeSearch = searchState.subscribe(
             (state) => state.search,
             () => {
@@ -61,6 +75,17 @@ const App: FC = () => {
         }
 
     }, [])
+    useEffect(() => {
+        const unsubscribeDirectoryDisplay = directoryDisplayState.subscribe(
+            (state) => state.display,
+            () => {
+                setDisplaybool(displayBool => !displayBool)
+            }
+        )
+        return () => {
+            unsubscribeDirectoryDisplay()
+        }
+    },[displayBool])
 
     return <>
         <Box
@@ -72,7 +97,8 @@ const App: FC = () => {
         >
             {Search()}
             {Clock()}
-            {Directories()}
+            { displayBool ? <Directories file="gay"/> : <DirectoriesNULL/>}
+
         </Box>
     </>
 }

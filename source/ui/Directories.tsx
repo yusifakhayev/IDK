@@ -1,10 +1,45 @@
 import React from 'react'
-import {Text} from 'ink'
-import {readFile} from '../subprocesses/readFile'
+import {Box, Text} from 'ink'
+import Gradient from 'ink-gradient'
 
-export const Directories = (): JSX.Element => {
-    readFile('/home/yusif/Code/CLI/ink/idk/package.json')
+export const Directories = ({file}: {file: string}): JSX.Element => {
+    // import {fileBufferState} from '../state/fileBufferState'
+    // import {directoryDisplayState} from '../state/directoryDisplayState'
+    // const [fileOut, setFileOut] = useState('')
+    // const [reload, setReload] = useState(0)
+    //
+    // useEffect(() => {
+    //     const unsubscribeDirectoryDisplayState = directoryDisplayState.subscribe(
+    //         (state) => state.display,
+    //         () => {
+    //             setReload(reload => reload + 1)
+    //         }
+    //     )
+    //     const unsubscribeFileBuffer = fileBufferState.subscribe(
+    //         (state) => state.file,
+    //         (value) => {
+    //             setFileOut(value)
+    //             setReload(reload => reload + 1)
+    //         }
+    //     )
+    //
+    //     return () => {
+    //         unsubscribeDirectoryDisplayState()
+    //         unsubscribeFileBuffer()
+    //     }
+    //
+    // },[])
+
+
     return <>
-        <Text>gay</Text>
+         <Box
+             justifyContent='center'
+             alignItems='center'
+         >
+             <Gradient name='retro'>
+                 <Text> {file} </Text>
+             </Gradient>
+         </Box>
     </>
 }
+

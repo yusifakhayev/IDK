@@ -1,1 +1,1 @@
-export declare const readFile: (filePath: string) => JSX.Element;
+export declare const readFile: () => JSX.Element;

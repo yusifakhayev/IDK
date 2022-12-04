@@ -22,30 +22,27 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.readFile = void 0;
+exports.getDirectory = void 0;
+const child_process_1 = __importDefault(require("child_process"));
 const react_1 = __importStar(require("react"));
 const directoryState_1 = require("../state/directoryState");
-const fileBufferState_1 = require("../state/fileBufferState");
-const fs = __importStar(require("fs"));
-const readFile = () => {
-    const setFile = (0, fileBufferState_1.fileBufferState)((state) => state.setFile);
-    const reading = ({ path }) => {
-        fs.readFile(path, (error, data) => {
-            if (error) {
-                throw error;
-            }
-            setFile(data.toString());
-        });
-    };
+const getDirectory = () => {
+    const setDirectory = (0, directoryState_1.directoryState)((state) => state.setDirectory);
     (0, react_1.useEffect)(() => {
-        const unsubscribeDirectory = directoryState_1.directoryState.subscribe((state) => state.directory, (value) => {
-            reading({ path: `${value.trim()}/package.json` });
+        child_process_1.default.exec('pwd', (error, stdout, stderr) => {
+            if (error) {
+                console.log(error);
+            }
+            if (stderr) {
+                console.log(stderr);
+            }
+            setDirectory(stdout);
         });
-        return () => {
-            unsubscribeDirectory();
-        };
     }, []);
     return react_1.default.createElement(react_1.default.Fragment, null);
 };
-exports.readFile = readFile;
+exports.getDirectory = getDirectory;
