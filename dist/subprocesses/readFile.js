@@ -27,6 +27,7 @@ exports.readFile = void 0;
 const react_1 = __importStar(require("react"));
 const directoryState_1 = require("../state/directoryState");
 const fileBufferState_1 = require("../state/fileBufferState");
+const appendFileState_1 = require("../state/appendFileState");
 const fs = __importStar(require("fs"));
 const readFile = () => {
     const setFile = (0, fileBufferState_1.fileBufferState)((state) => state.setFile);
@@ -39,10 +40,13 @@ const readFile = () => {
         });
     };
     (0, react_1.useEffect)(() => {
-        const unsubscribeDirectory = directoryState_1.directoryState.subscribe((state) => state.directory, (value) => {
-            reading({ path: `${value.trim()}/package.json` });
+        const unsubscribeAppendFile = appendFileState_1.appendFileState.subscribe((state) => state.appendFile, (value) => {
+            reading({ path: `${value}` });
+        });
+        const unsubscribeDirectory = directoryState_1.directoryState.subscribe((state) => state.directory, () => {
         });
         return () => {
+            unsubscribeAppendFile();
             unsubscribeDirectory();
         };
     }, []);

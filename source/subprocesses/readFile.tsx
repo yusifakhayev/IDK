@@ -1,6 +1,7 @@
 import React, {useEffect} from 'react'
 import {directoryState} from '../state/directoryState'
 import {fileBufferState} from '../state/fileBufferState'
+import {appendFileState} from '../state/appendFileState'
 import * as fs from 'fs'
 
 export const readFile = () =>  {
@@ -14,14 +15,22 @@ export const readFile = () =>  {
             setFile(data.toString())
         })
     }
+
     useEffect(() => {
+        const unsubscribeAppendFile = appendFileState.subscribe(
+            (state) => state.appendFile,
+            (value) => {
+                reading({path: `${value}`})
+            }
+        )
+
         const unsubscribeDirectory = directoryState.subscribe(
             (state) => state.directory,
-            (value) => {
-                reading({path: `${value.trim()}/package.json`})
+            () => {
             }
         )
         return () => {
+            unsubscribeAppendFile()
             unsubscribeDirectory()
         }
 

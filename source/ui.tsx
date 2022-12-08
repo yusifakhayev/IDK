@@ -1,30 +1,37 @@
 import React, {FC, useEffect, useState} from 'react';
-import {useInput, Box, useApp} from 'ink';
-import {enterFullscreen, exitFullscreen} from './helpers/fullscreen'
+import {useInput, Box} from 'ink';
+import {enterFullscreen, exitFullscreen, clearScreen} from './helpers/fullscreen'
 import {fullscreenState} from './state/fullscreenState'
 import {searchState} from './state/searchState'
 import {clockState} from './state/clockState'
 import {directoryDisplayState} from './state/directoryDisplayState'
+import {refreshState} from './state/refreshState'
 import {Search} from './ui/Search'
 import {Clock} from './ui/Clock'
 import {Directories} from './ui/Directories'
 import {DirectoriesNULL} from './ui/DirectoriesNULL'
 import {getDirectory} from './subprocesses/getDirectory'
-import {readFile} from './subprocesses/readFile'
+// import {readFile} from './subprocesses/readFile'
+import {fileBufferState} from './state/fileBufferState'
+import {appendFileState} from './state/appendFileState'
 
 const App: FC = () => {
-    readFile()
     getDirectory()
     const toggleFullscreen = fullscreenState((state) => state.toggleFullscreen)
     const toggleSearch = searchState((state) => state.toggleSearch)
     const toggleClock = clockState((state) => state.toggleClock)
     const toggleDirectoryDisplay = directoryDisplayState((state) => state.toggleDisplay)
+    const setRefresh = refreshState((state) => state.toggleRefresh)
+    // const appendFile = appendFileState((state) => state.appendFile)
     // const directoryDisplay = directoryDisplayState((state) => state.display)
+    // readFile({afileToAppendppendFile: `${fileToAppend}`})
+    //@ts-ignore
 
     //@ts-ignore
     const [reload, setReload] = useState(0)
-    const [displayBool, setDisplaybool] = useState(true)
-    const {exit} = useApp()
+    const [displayBool, setDisplaybool] = useState(false)
+    const [fileOut, setFileOut] = useState('')
+    // const {exit} = useApp()
 
     useInput((input) => {
         switch (input) {
@@ -41,7 +48,7 @@ const App: FC = () => {
                 toggleDirectoryDisplay()
                 break
             case "q":
-                exit()
+                clearScreen()
                 break
         }
     })
@@ -59,6 +66,7 @@ const App: FC = () => {
             (state) => state.search,
             () => {
                 setReload(reload => reload + 1)
+                setRefresh()
             }
         )
         const unsubscribeClock = clockState.subscribe(
@@ -67,14 +75,30 @@ const App: FC = () => {
                 setReload(reload => reload + 1)
             }
         )
+        const unsubscribeFileBuffer = fileBufferState.subscribe(
+             (state) => state.file,
+             (value) => {
+                 setFileOut(value)
+                 setRefresh()
+                 setReload(reload => reload + 1)
+             }
+        )
+        const unsubscribeAppendFile = appendFileState.subscribe(
+            (state) => state.appendFile,
+            () => {
+            }
+        )
 
         return () => {
+            unsubscribeAppendFile()
+            unsubscribeFileBuffer()
             unsubscribeFullscreen()
             unsubscribeSearch()
             unsubscribeClock()
         }
 
     }, [])
+
     useEffect(() => {
         const unsubscribeDirectoryDisplay = directoryDisplayState.subscribe(
             (state) => state.display,
@@ -97,7 +121,7 @@ const App: FC = () => {
         >
             {Search()}
             {Clock()}
-            { displayBool ? <Directories file="gay"/> : <DirectoriesNULL/>}
+            { displayBool ? <Directories file={fileOut}/> : <DirectoriesNULL/>}
 
         </Box>
     </>

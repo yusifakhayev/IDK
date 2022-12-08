@@ -7,6 +7,6 @@ exports.directoryDisplayState = void 0;
 const zustand_1 = __importDefault(require("zustand"));
 const middleware_1 = require("zustand/middleware");
 exports.directoryDisplayState = (0, zustand_1.default)()((0, middleware_1.subscribeWithSelector)((set) => ({
-    display: true,
+    display: false,
     toggleDisplay: () => set((state) => ({ display: !state.display }))
 })));

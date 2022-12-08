@@ -6,7 +6,7 @@ interface directoryDisplayState {
     toggleDisplay: () => void
 }
 export const directoryDisplayState = create<directoryDisplayState>()(subscribeWithSelector((set) => ({
-    display: true,
+    display: false,
     toggleDisplay: () => set((state) => ({display: !state.display}))
 })))
 

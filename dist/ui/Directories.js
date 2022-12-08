@@ -6,40 +6,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Directories = void 0;
 const react_1 = __importDefault(require("react"));
 const ink_1 = require("ink");
-const ink_gradient_1 = __importDefault(require("ink-gradient"));
+const ink_syntax_highlight_1 = __importDefault(require("ink-syntax-highlight"));
 const Directories = ({ file }) => {
-    // import {fileBufferState} from '../state/fileBufferState'
-    // import {directoryDisplayState} from '../state/directoryDisplayState'
-    // const [fileOut, setFileOut] = useState('')
-    // const [reload, setReload] = useState(0)
-    //
-    // useEffect(() => {
-    //     const unsubscribeDirectoryDisplayState = directoryDisplayState.subscribe(
-    //         (state) => state.display,
-    //         () => {
-    //             setReload(reload => reload + 1)
-    //         }
-    //     )
-    //     const unsubscribeFileBuffer = fileBufferState.subscribe(
-    //         (state) => state.file,
-    //         (value) => {
-    //             setFileOut(value)
-    //             setReload(reload => reload + 1)
-    //         }
-    //     )
-    //
-    //     return () => {
-    //         unsubscribeDirectoryDisplayState()
-    //         unsubscribeFileBuffer()
-    //     }
-    //
-    // },[])
     return react_1.default.createElement(react_1.default.Fragment, null,
-        react_1.default.createElement(ink_1.Box, { justifyContent: 'center', alignItems: 'center' },
-            react_1.default.createElement(ink_gradient_1.default, { name: 'retro' },
-                react_1.default.createElement(ink_1.Text, null,
-                    " ",
-                    file,
-                    " "))));
+        react_1.default.createElement(ink_1.Box, { justifyContent: 'flex-end', alignItems: 'center', width: '40%', height: '60%' },
+            react_1.default.createElement(ink_1.Text, { wrap: 'truncate', italic: true },
+                react_1.default.createElement(ink_syntax_highlight_1.default, { code: file, theme: 'dracula' }))));
 };
 exports.Directories = Directories;
