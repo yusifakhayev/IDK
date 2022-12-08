@@ -7,20 +7,16 @@ import App from './ui';
 //@ts-ignore
 const cli = meow(`
 	Usage
-	  $ ink_zustand
+	  $ cd <target_dir>
+	  $ idk
 
 	Options
-		--name  Your name
+		--mode (explore, find, clean)
 
 	Examples
 	  $ ink_zustand --name=Jane
 	  Hello, Jane
 `, {
-	flags: {
-		name: {
-			type: 'string'
-		}
-	}
 });
 
 render(<App/>);
