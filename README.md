@@ -3,8 +3,8 @@
 [![](./assets/idk.svg)](#About)
 
 🟥 🟨 🟩
-# idk
-***a NodeJS File Manager***
+# idk (**WIP**)
+***a Terminal-Based File Manager***
 
 <!-- INDEX -->
 ### Index
